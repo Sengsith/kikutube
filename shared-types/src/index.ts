@@ -1,3 +1,20 @@
+/* If you need to update types in the future
+1. Make changes you need
+2. Update the version in package.json
+3. Rebuild and republish
+
+cd my-project/shared-types
+npm run build
+npm publish
+
+4. Update the package in client and server folders
+
+cd my-project/client
+npm update @your-github-username/shared-types
+cd ../server
+npm update @your-github-username/shared-types
+*/
+
 // Each video may or may not have specific resolution
 export interface VideoThumbnails {
   default?: { url: string };
