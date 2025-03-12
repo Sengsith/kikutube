@@ -1,0 +1,26 @@
+{
+  "name": "@sengsith/shared-types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript types for kikutube",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sengsith/shared-types.git"
+  },
+  "author": "Angelo Rosario",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  }
+}
