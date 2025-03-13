@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { YouTubeVideo, Channel } from "@sengsith/shared-types";
+import VideoCard from "./components/VideoCard";
 
 // Data returned from API is an object with an items array
-interface BackendData {
+interface TrendingData {
   items: [
     {
       video: YouTubeVideo;
@@ -13,7 +14,7 @@ interface BackendData {
 }
 
 const App = () => {
-  const [backendData, setBackendData] = useState<BackendData | null>(null);
+  const [trendingData, setTrendingData] = useState<TrendingData | null>(null);
 
   // Data fetched from backend is combined from /videos and /channels endpoint from YouTube's API. Both video and channel is merged into one object (BackendData). TypeScript is here to reinforce the properties we are definitely using, but if we need access to more data, add to interfaces
   const fetchTrendingVideos = async () => {
@@ -26,38 +27,28 @@ const App = () => {
         },
       });
       const data = await res.json();
-      setBackendData(data);
+      setTrendingData(data);
     } catch (error) {
       console.error("Error fetching beckend:", error);
     }
   };
 
   useEffect(() => {
-    console.log(backendData);
-  }, [backendData]);
+    console.log(trendingData);
+  }, [trendingData]);
 
   return (
     <>
       <h1>Hello from client!</h1>
-      <button type="button" onClick={fetchTrendingVideos}>
+      <button id="fetch-trending" type="button" onClick={fetchTrendingVideos}>
         Get trending videos
       </button>
-      <div>
-        {backendData &&
-          backendData.items.map((item, index) => (
-            <div key={index}>
-              <h3>{item.video.snippet.title}</h3>
-              <img
-                src={item.video.snippet.thumbnails.medium?.url}
-                alt={item.video.snippet.title}
-              />
-              <h4>{item.video.snippet.channelTitle}</h4>
-              <img
-                src={item.channel.snippet.thumbnails.medium?.url}
-                alt={item.video.snippet.channelTitle}
-              />
-              {/* <p>{video.snippet.description}</p> */}
-            </div>
+      <div id="video-cards">
+        {trendingData &&
+          trendingData.items.map((item, index) => (
+            <React.Fragment key={`trending-${index}`}>
+              <VideoCard item={item} />
+            </React.Fragment>
           ))}
       </div>
     </>
