@@ -1,7 +1,10 @@
+#video-cards-wrapper {
+  container: video-cards / inline-size;
+}
+
 #video-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
-  container-type: inline-size;
 }
 
 .video-card {
@@ -49,7 +52,7 @@ line-clamp in selected styles determines how many lines */
   text-overflow: ellipsis;
 }
 
-@media (min-width: 528px) {
+@container video-cards (min-width: 528px) {
   #video-cards {
     grid-template-columns: repeat(
       auto-fit,
