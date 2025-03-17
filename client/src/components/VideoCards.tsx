@@ -1,5 +1,6 @@
 import "./videoCards.css";
 import { VideoCollectionData } from "../types/VideoCollectionData";
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 interface VideoCardsProps {
   data: VideoCollectionData | null;
@@ -36,23 +37,22 @@ const formatViews = (viewCount: string): string => {
 
   return `${viewCount} views`;
 };
-// console.log(formatViews("0"));
-// console.log(formatViews("1"));
-// console.log(formatViews("1516"));
-// console.log(formatViews("12261"));
-// console.log(formatViews("152627"));
-// console.log(formatViews("1000000"));
-// console.log(formatViews("1612464"));
-// console.log(formatViews("12551616"));
-// console.log(formatViews("125514616"));
-// console.log(formatViews("1000000000"));
-// console.log(formatViews("1015167257"));
-// console.log(formatViews("1115167257"));
-// console.log(formatViews("5415167257"));
-// console.log(formatViews("12415167257"));
-// console.log(formatViews("124151647257"));
 
-// const formatDate = (date: string): string => {};
+// Uses date-fns library to calculate distance from now to publishedDate
+const formatDate = (publishedDate: string): string => {
+  // ISO_8601
+  // Z suffix means UTC time
+  // 2025-03-16T10:34:00Z
+  // YYYY-MM-DDTHH:MM:SSZ
+  const date = parseISO(publishedDate);
+
+  const distance = formatDistanceToNow(date, {
+    addSuffix: true,
+    includeSeconds: true,
+  });
+
+  return distance;
+};
 
 const VideoCards = ({ data }: VideoCardsProps) => {
   return (
@@ -78,7 +78,7 @@ const VideoCards = ({ data }: VideoCardsProps) => {
                   <h3 className="video-title">{item.video.snippet.title}</h3>
                   {/* prettier-ignore */}
                   <p className="channel-title">
-                    {item.video.snippet.channelTitle} &#8226; {formatViews(item.video.statistics.viewCount)} &#8226; {item.video.snippet.publishedAt}
+                    {item.video.snippet.channelTitle} &#8226; {formatViews(item.video.statistics.viewCount)} &#8226; {formatDate(item.video.snippet.publishedAt)}
                   </p>
                 </div>
               </div>
