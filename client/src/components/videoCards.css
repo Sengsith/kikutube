@@ -12,23 +12,43 @@
   flex-direction: column;
   margin-bottom: 2rem;
 }
+
+.video-thumbnail-wrapper {
+  position: relative;
+}
+
 .video-thumbnail {
+  width: 100%;
   margin-bottom: 0.75rem;
 }
+
+.video-duration {
+  font-size: 0.8rem;
+  background-color: hsla(0, 0%, 0%, 0.7);
+  position: absolute;
+  padding: 0.25rem 0.4rem;
+  bottom: 1.25rem;
+  right: 0.5rem;
+  border-radius: 0.3rem;
+}
+
 .video-info {
   display: flex;
   padding: 0 1rem;
 }
+
 .channel-thumbnail {
   max-width: 40px;
   max-height: 40px;
   border-radius: 100vmax;
   margin-right: 0.75rem;
 }
+
 .text-content {
   display: flex;
   flex-direction: column;
 }
+
 .video-title {
   font-size: 0.9rem;
   font-weight: bold;
@@ -40,6 +60,7 @@
   line-clamp: 2;
   -webkit-line-clamp: 2;
 }
+
 .channel-title {
   font-size: 0.8rem;
   color: hsl(0, 0%, 60%);

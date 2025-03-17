@@ -12,6 +12,7 @@
   "dependencies": {
     "@sengsith/shared-types": "^1.0.0",
     "date-fns": "^4.1.0",
+    "duration-fns": "^3.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

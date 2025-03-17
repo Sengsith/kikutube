@@ -1,6 +1,7 @@
 import "./videoCards.css";
 import { VideoCollectionData } from "../types/VideoCollectionData";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { parse as parseDuration } from "duration-fns";
 
 interface VideoCardsProps {
   data: VideoCollectionData | null;
@@ -54,6 +55,27 @@ const formatDate = (publishedDate: string): string => {
   return distance;
 };
 
+const formatTime = (isoDuration: string): string => {
+  // Parse the ISO duration string
+  const duration = parseDuration(isoDuration);
+
+  // Extract hours, minutes, seconds
+  const hours = duration.hours || 0;
+  const minutes = duration.minutes || 0;
+  const seconds = duration.seconds || 0;
+
+  // Format based on available components
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  } else if (minutes > 0) {
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  } else {
+    return `0:${seconds.toString().padStart(2, "0")}`;
+  }
+};
+
 const VideoCards = ({ data }: VideoCardsProps) => {
   return (
     <div id="video-cards-wrapper">
@@ -61,12 +83,17 @@ const VideoCards = ({ data }: VideoCardsProps) => {
         {data &&
           data.items.map((item, index) => (
             <div key={`trending-${index}`} className="video-card">
-              <img
-                className="video-thumbnail"
-                src={item.video.snippet.thumbnails.medium?.url}
-                alt={item.video.snippet.title}
-                loading="lazy"
-              />
+              <div className="video-thumbnail-wrapper">
+                <img
+                  className="video-thumbnail"
+                  src={item.video.snippet.thumbnails.medium?.url}
+                  alt={item.video.snippet.title}
+                  loading="lazy"
+                />
+                <p className="video-duration">
+                  {formatTime(item.video.contentDetails.duration)}
+                </p>
+              </div>
               <div className="video-info">
                 <img
                   className="channel-thumbnail"
