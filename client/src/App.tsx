@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-// import VideoCard from "./components/VideoCard";
 import VideoCards from "./components/VideoCards";
 import { VideoCollectionData } from "./types/VideoCollectionData";
 

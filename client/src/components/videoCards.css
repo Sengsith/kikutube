@@ -32,24 +32,17 @@
 .video-title {
   font-size: 0.9rem;
   font-weight: bold;
+  display: -webkit-box;
+  /* Max vertical line limit */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-clamp: 2;
   -webkit-line-clamp: 2;
 }
 .channel-title {
   font-size: 0.8rem;
   color: hsl(0, 0%, 60%);
-  line-clamp: 1;
-  -webkit-line-clamp: 1;
-}
-
-/* Hide text when going over line limit,
-line-clamp in selected styles determines how many lines */
-.video-title,
-.channel-title {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 @container video-cards (min-width: 528px) {
