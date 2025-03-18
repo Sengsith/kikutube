@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 // Load env variables
 dotenv.config();
-import trendingRouter from "./routes/trendingRoute";
+import videosRouter from "./routes/videosRoute";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -18,10 +18,10 @@ app.get("/", (req, res) => {
   res.send({ message: "Hello from the backend!" });
 });
 
-// Trending videos route
+// videos route
 // params: {part: "id,snippet", chart: "mostPopular", regionCode: "JP", maxResults: "5"
 // GET https://www.googleapis.com/youtube/v3/videos
-app.use("/api/trending", trendingRouter);
+app.use("/api/videos", videosRouter);
 
 app.listen(port, () => {
   console.log("Server is running!");
@@ -30,7 +30,7 @@ app.listen(port, () => {
 // search endpoint for search bar queries
 // /search
 // GET https://www.googleapis.com/youtube/v3/search
-// params: q, type?, part,
+// params: q, type?, part, maxResults
 // has access to captions too!
 // search channels and videos, captions need to search videos only though!
 

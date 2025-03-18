@@ -2,9 +2,12 @@ import "./videoCards.css";
 import { VideoCollectionData } from "../types/VideoCollectionData";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { parse as parseDuration } from "duration-fns";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface VideoCardsProps {
   data: VideoCollectionData | null;
+  fetchVideos: () => void;
+  hasMore: boolean;
 }
 
 const formatViews = (viewCount: string): string => {
@@ -45,8 +48,10 @@ const formatDate = (publishedDate: string): string => {
   // Z suffix means UTC time
   // 2025-03-16T10:34:00Z
   // YYYY-MM-DDTHH:MM:SSZ
+  // Parse the ISO string to Date object
   const date = parseISO(publishedDate);
 
+  // Get difference using date-fns
   const distance = formatDistanceToNow(date, {
     addSuffix: true,
     includeSeconds: true,
@@ -55,6 +60,7 @@ const formatDate = (publishedDate: string): string => {
   return distance;
 };
 
+// Uses duration-fns library to format video duration
 const formatTime = (isoDuration: string): string => {
   // Parse the ISO duration string
   const duration = parseDuration(isoDuration);
@@ -76,41 +82,54 @@ const formatTime = (isoDuration: string): string => {
   }
 };
 
-const VideoCards = ({ data }: VideoCardsProps) => {
+const VideoCards = ({ data, fetchVideos, hasMore }: VideoCardsProps) => {
   return (
     <div id="video-cards-wrapper">
       <div id="video-cards">
-        {data &&
-          data.items.map((item, index) => (
-            <div key={`trending-${index}`} className="video-card">
-              <div className="video-thumbnail-wrapper">
-                <img
-                  className="video-thumbnail"
-                  src={item.video.snippet.thumbnails.medium?.url}
-                  alt={item.video.snippet.title}
-                  loading="lazy"
-                />
-                <p className="video-duration">
-                  {formatTime(item.video.contentDetails.duration)}
-                </p>
-              </div>
-              <div className="video-info">
-                <img
-                  className="channel-thumbnail"
-                  src={item.channel.snippet.thumbnails.medium?.url}
-                  alt={item.video.snippet.channelTitle}
-                  loading="lazy"
-                />
-                <div className="video-text-content">
-                  <h3 className="video-title">{item.video.snippet.title}</h3>
-                  {/* prettier-ignore */}
-                  <p className="channel-title">
-                    {item.video.snippet.channelTitle} &#8226; {formatViews(item.video.statistics.viewCount)} &#8226; {formatDate(item.video.snippet.publishedAt)}
-                  </p>
+        <InfiniteScroll
+          dataLength={data?.items.length || 0}
+          next={fetchVideos}
+          hasMore={hasMore}
+          loader={<></>}
+          endMessage={<></>}
+          scrollThreshold={0.9}
+        >
+          <div id="video-cards">
+            {data &&
+              data.items.map((item, index) => (
+                <div key={`trending-${index}`} className="video-card">
+                  <div className="video-thumbnail-wrapper">
+                    <img
+                      className="video-thumbnail"
+                      src={item.video.snippet.thumbnails.medium?.url}
+                      alt={item.video.snippet.title}
+                      loading="lazy"
+                    />
+                    <p className="video-duration">
+                      {formatTime(item.video.contentDetails.duration)}
+                    </p>
+                  </div>
+                  <div className="video-info">
+                    <img
+                      className="channel-thumbnail"
+                      src={item.channel.snippet.thumbnails.medium?.url}
+                      alt={item.video.snippet.channelTitle}
+                      loading="lazy"
+                    />
+                    <div className="video-text-content">
+                      <h3 className="video-title">
+                        {item.video.snippet.title}
+                      </h3>
+                      {/* prettier-ignore */}
+                      <p className="channel-title">
+                      {item.video.snippet.channelTitle} &#8226; {formatViews(item.video.statistics.viewCount)} &#8226; {formatDate(item.video.snippet.publishedAt)}
+                    </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              ))}
+          </div>
+        </InfiniteScroll>
       </div>
     </div>
   );

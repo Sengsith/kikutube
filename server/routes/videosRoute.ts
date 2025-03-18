@@ -5,26 +5,37 @@ import { YouTubeVideo, Channel } from "@sengsith/shared-types";
 const router = Router();
 
 router.get("/", async (req, res) => {
-  console.log("/api/trending route request received.");
-
-  const maxResults = req.query.maxResults || 5;
+  console.log("/api/videos route request received.");
 
   try {
     if (!process.env.YOUTUBE_API_KEY)
       throw new Error("YOUTUBE_API_KEY not found in environment variables.");
 
+    interface Params {
+      part: string;
+      chart: string;
+      regionCode: string;
+      maxResults?: string;
+      pageToken?: string;
+      key: string;
+    }
+
+    const params: Params = {
+      part: "id,snippet,contentDetails,statistics",
+      chart: "mostPopular",
+      regionCode: "JP",
+      key: process.env.YOUTUBE_API_KEY,
+    };
+
+    const maxResults = req.query.maxResults;
+    const pageToken = req.query.pageToken;
+    if (maxResults) params.maxResults = maxResults.toString();
+    if (pageToken) params.pageToken = pageToken.toString();
+
     // 1. Fetch trending videos from /videos endpoint
     const videoResponse = await axios.get(
       "https://www.googleapis.com/youtube/v3/videos",
-      {
-        params: {
-          part: "id,snippet,contentDetails,statistics",
-          chart: "mostPopular",
-          regionCode: "JP",
-          maxResults: maxResults,
-          key: process.env.YOUTUBE_API_KEY,
-        },
-      }
+      { params }
     );
 
     // 2. Extract the unique channel IDs
@@ -66,7 +77,10 @@ router.get("/", async (req, res) => {
     );
 
     // 6. Return the merged data
-    res.json({ items: trendingVideos });
+    res.json({
+      items: trendingVideos,
+      nextPageToken: videoResponse.data.nextPageToken,
+    });
   } catch (error) {
     console.error("Error fetching trending data:", error);
   }

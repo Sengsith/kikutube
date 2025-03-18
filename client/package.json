@@ -14,7 +14,8 @@
     "date-fns": "^4.1.0",
     "duration-fns": "^3.0.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-infinite-scroll-component": "^6.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

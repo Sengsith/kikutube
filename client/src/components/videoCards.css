@@ -66,6 +66,10 @@
   color: hsl(0, 0%, 60%);
 }
 
+.infinite-scroll-component {
+  overflow: hidden !important;
+}
+
 @container video-cards (min-width: 528px) {
   #video-cards {
     grid-template-columns: repeat(
