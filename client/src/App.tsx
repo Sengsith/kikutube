@@ -72,7 +72,7 @@ const App = () => {
     }
   }, [loading, nextPageToken]);
 
-  // Fetch trending videos on mount
+  // Fetch trending videos on initial load
   useEffect(() => {
     if (!initialLoadRef.current) {
       initialLoadRef.current = true;
