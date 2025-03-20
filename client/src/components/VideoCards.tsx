@@ -13,7 +13,7 @@ interface VideoCardsProps {
 
 const VideoCards = ({ data, fetchVideos, hasMore }: VideoCardsProps) => {
   // Flag to exit from useEffect if we have enough content already
-  const [needInitialFetch, setNeedInitialFetch] = useState(true);
+  const [needInitialFetches, setNeedInitialFetches] = useState(true);
 
   const formatViews = (viewCount: string): string => {
     // Cast string to number
@@ -89,7 +89,7 @@ const VideoCards = ({ data, fetchVideos, hasMore }: VideoCardsProps) => {
 
   // Check if we need to load more content when data changes
   useEffect(() => {
-    if (!hasMore || !data || !needInitialFetch) return;
+    if (!hasMore || !data || !needInitialFetches) return;
 
     // Get the parent element to check its dimensions
     const wrapper = document.getElementById("video-cards-wrapper");
@@ -101,9 +101,9 @@ const VideoCards = ({ data, fetchVideos, hasMore }: VideoCardsProps) => {
     if (needsMoreContent && hasMore) {
       fetchVideos();
     } else {
-      setNeedInitialFetch(false);
+      setNeedInitialFetches(false);
     }
-  }, [data, hasMore, fetchVideos, needInitialFetch]);
+  }, [data, hasMore, fetchVideos, needInitialFetches]);
 
   return (
     <div id="video-cards-wrapper">
