@@ -1,13 +1,19 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { VideoCollectionData } from "../types/VideoCollectionData";
+import { ReactNode, useState, useEffect, useRef, useCallback } from "react";
+import { VideoCollectionData } from "../../types/VideoCollectionData";
+import { TrendingContext } from "./TrendingContext";
 
-const useTrendingVideos = () => {
+// Create provider component
+interface TrendingProviderProps {
+  children: ReactNode;
+}
+
+export const TrendingProvider = ({ children }: TrendingProviderProps) => {
   const [trendingData, setTrendingData] = useState<VideoCollectionData | null>(
     null
   );
 
   // For trending videos pagination
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMoreTrending, setHasMoreTrending] = useState(true);
   const [nextPageToken, setNextPageToken] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +52,7 @@ const useTrendingVideos = () => {
         setNextPageToken(data.nextPageToken);
       } else {
         // No more videos to fetch
-        setHasMore(false);
+        setHasMoreTrending(false);
       }
 
       setTrendingData((prev) => {
@@ -64,7 +70,7 @@ const useTrendingVideos = () => {
     } catch (error) {
       console.error("Error fetching beckend:", error);
       // Stop showing in case of an error and we reach the end
-      setHasMore(false);
+      setHasMoreTrending(false);
     } finally {
       setLoading(false);
     }
@@ -83,7 +89,11 @@ const useTrendingVideos = () => {
     console.log(trendingData);
   }, [trendingData]);
 
-  return { trendingData, fetchTrendingVideos, hasMore };
-};
+  const value = { trendingData, fetchTrendingVideos, hasMoreTrending };
 
-export default useTrendingVideos;
+  return (
+    <TrendingContext.Provider value={value}>
+      {children}
+    </TrendingContext.Provider>
+  );
+};

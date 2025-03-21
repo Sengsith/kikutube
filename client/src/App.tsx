@@ -1,17 +1,18 @@
 import "./App.css";
-import VideoCards from "./components/VideoCards";
-import useTrendingVideos from "./hooks/useTrendingVideos";
+import { Route, Routes } from "react-router";
+import Home from "./pages/Home";
+import Watch from "./pages/Watch";
+import { TrendingProvider } from "./contexts/trending";
 
 const App = () => {
-  const { trendingData, fetchTrendingVideos, hasMore } = useTrendingVideos();
-
   return (
     <div id="app">
-      <VideoCards
-        data={trendingData}
-        fetchVideos={fetchTrendingVideos}
-        hasMore={hasMore}
-      />
+      <TrendingProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/watch/:id" element={<Watch />} />
+        </Routes>
+      </TrendingProvider>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { VideoCollectionData } from "../types/VideoCollectionData";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { parse as parseDuration } from "duration-fns";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Link } from "react-router";
 
 interface VideoCardsProps {
   data: VideoCollectionData | null;
@@ -121,15 +122,17 @@ const VideoCards = ({ data, fetchVideos, hasMore }: VideoCardsProps) => {
               data.items.map((item, index) => (
                 <div key={`trending-${index}`} className="video-card">
                   <div className="video-thumbnail-wrapper">
-                    <img
-                      className="video-thumbnail"
-                      src={item.video.snippet.thumbnails.medium?.url}
-                      alt={item.video.snippet.title}
-                      loading="lazy"
-                    />
-                    <p className="video-duration">
-                      {formatTime(item.video.contentDetails.duration)}
-                    </p>
+                    <Link to={`/watch/${item.video.id}`}>
+                      <img
+                        className="video-thumbnail"
+                        src={item.video.snippet.thumbnails.medium?.url}
+                        alt={item.video.snippet.title}
+                        loading="lazy"
+                      />
+                      <p className="video-duration">
+                        {formatTime(item.video.contentDetails.duration)}
+                      </p>
+                    </Link>
                   </div>
                   <div className="video-info">
                     <img
@@ -139,9 +142,11 @@ const VideoCards = ({ data, fetchVideos, hasMore }: VideoCardsProps) => {
                       loading="lazy"
                     />
                     <div className="video-text-content">
-                      <h3 className="video-title">
-                        {item.video.snippet.title}
-                      </h3>
+                      <Link to={`/watch/${item.video.id}`}>
+                        <h3 className="video-title">
+                          {item.video.snippet.title}
+                        </h3>
+                      </Link>
                       {/* prettier-ignore */}
                       <p className="channel-title">
                       {item.video.snippet.channelTitle} &#8226; {formatViews(item.video.statistics.viewCount)} &#8226; {formatDate(item.video.snippet.publishedAt)}
