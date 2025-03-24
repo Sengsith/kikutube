@@ -3,16 +3,16 @@
 2. Update the version in package.json
 3. Rebuild and republish
 
-cd my-project/shared-types
+cd kikutube/shared-types
 npm run build
 npm publish
 
 4. Update the package in client and server folders
 
-cd my-project/client
-npm update @your-github-username/shared-types
+cd kikutube/client
+dotenv npm update @sengsith/shared-types
 cd ../server
-npm update @your-github-username/shared-types
+dotenv npm update @sengsith/shared-types
 */
 
 // Each video may or may not have specific resolution

@@ -34,7 +34,7 @@ const Watch = () => {
           loading="lazy"
         />
         <p id="watch-channel-title">{video.snippet.channelTitle}</p>
-        {/* <p id="watch-channel-subs">{channel.statistics.subscriberCount}</p> */}
+        <p id="watch-channel-subs">{channel.statistics.subscriberCount} subs</p>
         <p id="watch-video-views">{video.statistics.viewCount} views</p>
         <p id="watch-video-published">{video.snippet.publishedAt}</p>
       </div>
