@@ -76,7 +76,8 @@
       auto-fit,
       minmax(calc(16.5rem - 0.5rem), 1fr)
     );
-    padding-inline: 0.5rem;
+    /* Padding inline is 0.5rem from here + 0.5rem from the video cards on each edge */
+    padding-inline: calc(var(--global-padding-inline) / 2);
   }
 
   .video-card {

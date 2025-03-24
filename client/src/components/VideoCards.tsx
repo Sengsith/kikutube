@@ -108,56 +108,54 @@ const VideoCards = ({ data, fetchVideos, hasMore }: VideoCardsProps) => {
 
   return (
     <div id="video-cards-wrapper">
-      <div id="video-cards">
-        <InfiniteScroll
-          dataLength={data?.items.length || 0}
-          next={fetchVideos}
-          hasMore={hasMore}
-          loader={<></>}
-          endMessage={<></>}
-          scrollThreshold={0.9}
-        >
-          <div id="video-cards">
-            {data &&
-              data.items.map((item, index) => (
-                <div key={`trending-${index}`} className="video-card">
-                  <div className="video-thumbnail-wrapper">
-                    <Link to={`/watch/${item.video.id}`}>
-                      <img
-                        className="video-thumbnail"
-                        src={item.video.snippet.thumbnails.medium?.url}
-                        alt={item.video.snippet.title}
-                        loading="lazy"
-                      />
-                      <p className="video-duration">
-                        {formatTime(item.video.contentDetails.duration)}
-                      </p>
-                    </Link>
-                  </div>
-                  <div className="video-info">
+      <InfiniteScroll
+        dataLength={data?.items.length || 0}
+        next={fetchVideos}
+        hasMore={hasMore}
+        loader={<></>}
+        endMessage={<></>}
+        scrollThreshold={0.9}
+      >
+        <div id="video-cards">
+          {data &&
+            data.items.map((item, index) => (
+              <div key={`trending-${index}`} className="video-card">
+                <div className="video-thumbnail-wrapper">
+                  <Link to={`/watch/${item.video.id}`} state={item}>
                     <img
-                      className="channel-thumbnail"
-                      src={item.channel.snippet.thumbnails.medium?.url}
-                      alt={item.video.snippet.channelTitle}
+                      className="video-thumbnail"
+                      src={item.video.snippet.thumbnails.medium?.url}
+                      alt={item.video.snippet.title}
                       loading="lazy"
                     />
-                    <div className="video-text-content">
-                      <Link to={`/watch/${item.video.id}`}>
-                        <h3 className="video-title">
-                          {item.video.snippet.title}
-                        </h3>
-                      </Link>
-                      {/* prettier-ignore */}
-                      <p className="channel-title">
+                    <p className="video-duration">
+                      {formatTime(item.video.contentDetails.duration)}
+                    </p>
+                  </Link>
+                </div>
+                <div className="video-info">
+                  <img
+                    className="channel-thumbnail"
+                    src={item.channel.snippet.thumbnails.medium?.url}
+                    alt={item.video.snippet.channelTitle}
+                    loading="lazy"
+                  />
+                  <div className="video-text-content">
+                    <Link to={`/watch/${item.video.id}`} state={item}>
+                      <h3 className="video-title">
+                        {item.video.snippet.title}
+                      </h3>
+                    </Link>
+                    {/* prettier-ignore */}
+                    <p className="channel-title">
                       {item.video.snippet.channelTitle} &#8226; {formatViews(item.video.statistics.viewCount)} &#8226; {formatDate(item.video.snippet.publishedAt)}
                     </p>
-                    </div>
                   </div>
                 </div>
-              ))}
-          </div>
-        </InfiniteScroll>
-      </div>
+              </div>
+            ))}
+        </div>
+      </InfiniteScroll>
     </div>
   );
 };

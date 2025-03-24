@@ -57,6 +57,10 @@ export interface ChannelSnippet {
   thumbnails: ChannelThumbnails;
 }
 
+export interface ChannelStatistics {
+  subscriberCount: string;
+}
+
 // Each channel has these properties
 export interface Channel {
   id: string;

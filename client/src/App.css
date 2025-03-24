@@ -43,6 +43,14 @@ img {
   margin-bottom: 2rem;
 }
 
+nav {
+  padding-inline: var(--global-padding-inline);
+  padding-block: 1rem;
+}
+
+li {
+  list-style: none;
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

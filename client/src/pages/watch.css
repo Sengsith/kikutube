@@ -1,0 +1,14 @@
+#watch-info {
+  padding-inline: var(--global-padding-inline);
+}
+
+#watch-video-title {
+  font-size: 1.4rem;
+}
+
+#watch-channel-thumbnail {
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 100vmax;
+  margin-right: 0.75rem;
+}

@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
       "https://www.googleapis.com/youtube/v3/channels",
       {
         params: {
-          part: "id,snippet",
+          part: "id,snippet,statistics",
           id: channelIDs.join(","),
           key: process.env.YOUTUBE_API_KEY,
         },
