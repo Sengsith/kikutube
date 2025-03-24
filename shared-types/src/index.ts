@@ -65,4 +65,5 @@ export interface ChannelStatistics {
 export interface Channel {
   id: string;
   snippet: ChannelSnippet;
+  statistics: ChannelStatistics;
 }
