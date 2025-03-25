@@ -13,8 +13,9 @@ router.get("/", async (req, res) => {
 
     interface Params {
       part: string;
-      chart: string;
+      chart?: string;
       regionCode: string;
+      id?: string;
       maxResults?: string;
       pageToken?: string;
       key: string;
@@ -29,8 +30,14 @@ router.get("/", async (req, res) => {
 
     const maxResults = req.query.maxResults;
     const pageToken = req.query.pageToken;
+    const id = req.query.id;
     if (maxResults) params.maxResults = maxResults.toString();
     if (pageToken) params.pageToken = pageToken.toString();
+    if (id) {
+      params.id = id.toString();
+      // Need to get rid of chart if id is provided
+      delete params.chart;
+    }
 
     // 1. Fetch trending videos from /videos endpoint
     const videoResponse = await axios.get(

@@ -18,7 +18,7 @@ export const TrendingProvider = ({ children }: TrendingProviderProps) => {
   const [loading, setLoading] = useState(false);
 
   // Track initial load so we only run useEffect once
-  const initialLoadRef = useRef(false);
+  const initialTrendingRef = useRef(false);
 
   // Data fetched from backend is combined from /videos and /channels endpoint from YouTube's API. Both video and channel is merged into one object (BackendData). TypeScript is here to reinforce the properties we are definitely using, but if we need access to more data, add to interfaces
   const fetchTrendingVideos = useCallback(async () => {
@@ -78,8 +78,8 @@ export const TrendingProvider = ({ children }: TrendingProviderProps) => {
 
   // Fetch trending videos on initial load
   useEffect(() => {
-    if (!initialLoadRef.current) {
-      initialLoadRef.current = true;
+    if (!initialTrendingRef.current) {
+      initialTrendingRef.current = true;
       fetchTrendingVideos();
     }
   }, [fetchTrendingVideos]);

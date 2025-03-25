@@ -1,6 +1,8 @@
+import "./notFound.css";
+
 const NotFound = () => {
   return (
-    <div>
+    <div id="not-found">
       <h2>404 not found</h2>
     </div>
   );
