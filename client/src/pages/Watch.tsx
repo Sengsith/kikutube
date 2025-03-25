@@ -2,6 +2,11 @@ import "./watch.css";
 import { useParams, useLocation } from "react-router";
 import YouTube from "react-youtube";
 import { YouTubeVideo, Channel } from "@sengsith/shared-types";
+import {
+  formatDate,
+  shortFormatSubsOrViews,
+  longFormatViews,
+} from "../utils/format";
 
 const Watch = () => {
   // Use the id if the user bookmarks the page, fetch videoID data with initial page load
@@ -19,24 +24,36 @@ const Watch = () => {
     // },
   };
 
-  console.log(video);
-  console.log(channel);
+  // TODO: initial load with id, transcript layout
 
   return (
-    <div id="watch-video">
-      <YouTube videoId={id} opts={opts} />
-      <div id="watch-info">
+    <div id="watch-video-wrapper">
+      <YouTube id="watch-video-player" videoId={id} opts={opts} />
+      <div id="watch-info-wrapper">
         <p id="watch-video-title">{video.snippet.title}</p>
-        <img
-          id="watch-channel-thumbnail"
-          src={channel.snippet.thumbnails.medium?.url}
-          alt={video.snippet.channelTitle}
-          loading="lazy"
-        />
-        <p id="watch-channel-title">{video.snippet.channelTitle}</p>
-        <p id="watch-channel-subs">{channel.statistics.subscriberCount} subs</p>
-        <p id="watch-video-views">{video.statistics.viewCount} views</p>
-        <p id="watch-video-published">{video.snippet.publishedAt}</p>
+        <div id="watch-channel-info">
+          <img
+            id="watch-channel-thumbnail"
+            src={channel.snippet.thumbnails.medium?.url}
+            alt={video.snippet.channelTitle}
+            loading="lazy"
+          />
+          <p id="watch-channel-title">{video.snippet.channelTitle}</p>
+          <p id="watch-channel-subs">
+            {shortFormatSubsOrViews(
+              channel.statistics.subscriberCount,
+              "subscribers"
+            )}
+          </p>
+        </div>
+        <div id="watch-info-stats">
+          <p id="watch-video-views">
+            {longFormatViews(video.statistics.viewCount)}
+          </p>
+          <p id="watch-video-published">
+            {formatDate(video.snippet.publishedAt)}
+          </p>
+        </div>
       </div>
     </div>
   );

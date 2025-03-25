@@ -1,14 +1,39 @@
-#watch-info {
+#watch-video-player {
+  margin-bottom: 1rem;
+}
+
+#watch-info-wrapper {
   padding-inline: var(--global-padding-inline);
 }
 
 #watch-video-title {
   font-size: 1.4rem;
+  margin-bottom: 2rem;
+}
+
+#watch-channel-info {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
 #watch-channel-thumbnail {
   max-width: 40px;
   max-height: 40px;
   border-radius: 100vmax;
-  margin-right: 0.75rem;
+}
+
+#watch-channel-subs {
+  text-align: center;
+}
+
+#watch-info-stats {
+  font-size: 0.9rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
 }
