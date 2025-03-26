@@ -89,7 +89,7 @@ router.get("/", async (req, res) => {
       nextPageToken: videoResponse.data.nextPageToken,
     });
   } catch (error) {
-    console.error("Error fetching trending data:", error);
+    console.error("Error fetching data from /api/videos:", error);
   }
 });
 
