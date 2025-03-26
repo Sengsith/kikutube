@@ -78,8 +78,6 @@ const Watch = () => {
     };
   }, [id]);
 
-  // TODO: fix bug where if we start on /watch page, it does the api fetch from Home/VideoCards page
-  // This probably happens because our app is rendered which also renders TrendingProvider which does that by default
   return (
     <>
       {VCData && (

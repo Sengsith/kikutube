@@ -1,6 +1,7 @@
 import { ReactNode, useState, useEffect, useRef, useCallback } from "react";
 import { VideoCollectionData } from "../../types/VideoCollectionData";
 import { TrendingContext } from "./TrendingContext";
+import { useLocation } from "react-router";
 
 // Create provider component
 interface TrendingProviderProps {
@@ -19,6 +20,8 @@ export const TrendingProvider = ({ children }: TrendingProviderProps) => {
 
   // Track initial load so we only run useEffect once
   const initialTrendingRef = useRef(false);
+
+  const path = useLocation().pathname;
 
   // Data fetched from backend is combined from /videos and /channels endpoint from YouTube's API. Both video and channel is merged into one object (BackendData). TypeScript is here to reinforce the properties we are definitely using, but if we need access to more data, add to interfaces
   const fetchTrendingVideos = useCallback(async () => {
@@ -78,11 +81,18 @@ export const TrendingProvider = ({ children }: TrendingProviderProps) => {
 
   // Fetch trending videos on initial load
   useEffect(() => {
-    if (!initialTrendingRef.current) {
-      initialTrendingRef.current = true;
+    // Do not fetch videos if we're not on home page
+    if (path !== "/") return;
+
+    // If we are home and not have any filled data yet
+    if (path === "/" && !initialTrendingRef.current) {
       fetchTrendingVideos();
     }
-  }, [fetchTrendingVideos]);
+
+    return () => {
+      initialTrendingRef.current = true;
+    };
+  }, [fetchTrendingVideos, path]);
 
   // Debug useEffect
   useEffect(() => {
