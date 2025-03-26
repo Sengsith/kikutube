@@ -1,10 +1,10 @@
-import { Router } from "express";
-import axios from "axios";
+import { Router, Request, Response } from "express";
+import axios, { AxiosError } from "axios";
 import { YouTubeVideo, Channel } from "@sengsith/shared-types";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   console.log("/api/videos route request received.");
 
   try {
@@ -45,6 +45,18 @@ router.get("/", async (req, res) => {
       { params }
     );
 
+    // Do not go further if videoResponse is empty
+    if (!videoResponse.data.items || videoResponse.data.items.length === 0) {
+      console.error("No videos found:", params);
+
+      res.status(400).json({
+        message: "No videos found",
+        error: "The YouTube API returned no video results",
+        params: params,
+      });
+      return;
+    }
+
     // 2. Extract the unique channel IDs
     const channelIDs = [
       ...new Set(
@@ -65,6 +77,19 @@ router.get("/", async (req, res) => {
         },
       }
     );
+
+    // Do not go further if channelsResponse is empty
+    if (
+      !channelsResponse.data.items ||
+      channelsResponse.data.items.length === 0
+    ) {
+      console.error("No channels found");
+      res.status(400).json({
+        message: "No channels found",
+        error: "The YouTube API returned no channel results",
+      });
+      return;
+    }
 
     // 4. Create a lookup map for channels
     // Record<channelId, thumbnails>
@@ -89,7 +114,20 @@ router.get("/", async (req, res) => {
       nextPageToken: videoResponse.data.nextPageToken,
     });
   } catch (error) {
-    console.error("Error fetching data from /api/videos:", error);
+    // Axios errors
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      res.status(axiosError.response?.status || 500).json({
+        message: "Error fetching YouTube data",
+        error: axiosError.message,
+      });
+    } else {
+      // Generic errors
+      res.status(500).json({
+        message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
   }
 });
 
