@@ -1,18 +1,84 @@
 import "./watch.css";
-import { useParams } from "react-router";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useParams, useLocation } from "react-router";
 import YouTube from "react-youtube";
 import {
   formatDate,
   shortFormatSubsOrViews,
   longFormatViews,
 } from "../utils/format";
-import useFetchSingleVideo from "../hooks/useFetchSingleVideo";
+import { YouTubeVideo, Channel } from "@sengsith/shared-types";
+
+interface VideoChannelData {
+  video: YouTubeVideo;
+  channel: Channel;
+}
 
 const Watch = () => {
-  // Use the id if the user bookmarks the page, fetch videoID data with initial page load
+  // Use the id passed from Link
   const { id } = useParams();
 
-  const { VCData } = useFetchSingleVideo(id);
+  // Fetches a single video taking in an id, called if
+  const fetchSingleVideo = useCallback(
+    async (id: string | undefined): Promise<VideoChannelData | null> => {
+      if (!id) return null;
+
+      try {
+        // Create URL object to handle query params
+        const baseURL = import.meta.env.VITE_SERVER_URL + "/api/videos";
+        const url = new URL(baseURL);
+
+        // Add maxResults param, also set value here
+        url.searchParams.append("maxResults", "1");
+        // Add id param
+        url.searchParams.append("id", id);
+
+        // Fetch trending data
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+
+        return {
+          video: data.items[0].video,
+          channel: data.items[0].channel,
+        };
+      } catch (error) {
+        console.error("Error fetching beckend:", error);
+        return null;
+      }
+    },
+    []
+  );
+
+  // Stores Video and Channel data coming from useLocation or fetched with id
+  const [VCData, setVCData] = useState<VideoChannelData | null>(
+    (useLocation().state as VideoChannelData) || null
+  );
+
+  // Keep track of initial VCData load
+  const initialLoadRef = useRef(false);
+
+  // Fetch data from backend only if VCData is falsy and id exists
+  useEffect(() => {
+    if (initialLoadRef.current) return;
+
+    const loadVideoData = async () => {
+      if (!VCData && id) {
+        const fetchedData = await fetchSingleVideo(id);
+        setVCData(fetchedData);
+      }
+    };
+
+    loadVideoData();
+
+    return () => {
+      initialLoadRef.current = true;
+    };
+  }, [id, VCData, fetchSingleVideo]);
 
   // Options for YouTube player
   const opts = {
@@ -25,7 +91,7 @@ const Watch = () => {
 
   return (
     <>
-      {VCData ? (
+      {VCData && (
         <div id="watch-video-wrapper">
           <YouTube id="watch-video-player" videoId={id} opts={opts} />
           <div id="watch-info-wrapper">
@@ -56,10 +122,6 @@ const Watch = () => {
               </p>
             </div>
           </div>
-        </div>
-      ) : (
-        <div id="watch-not-found">
-          <h2>Oops! Video not found.</h2>
         </div>
       )}
     </>
