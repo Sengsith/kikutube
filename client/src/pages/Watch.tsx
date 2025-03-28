@@ -19,7 +19,7 @@ const Watch = () => {
   // Use the id passed from Link
   const { id } = useParams();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetches a single video taking in an id, called if
@@ -85,6 +85,7 @@ const Watch = () => {
         const fetchedData = await fetchSingleVideo(id);
         setVCData(fetchedData);
       }
+
       setLoading(false);
     };
 
@@ -110,46 +111,47 @@ const Watch = () => {
   }
 
   if (error) {
-    return <div className="error">Error fetching video: {error}</div>;
-  }
-
-  // Render "No video" only after we're done loading and no data
-  if (!VCData) {
-    return <div className="error">Oops! No video found.</div>;
+    return <div className="error">Oops! No video found: {error}</div>;
   }
 
   // Render out actual video data if all checks are good
   return (
-    <div id="watch-video-wrapper">
-      <YouTube id="watch-video-player" videoId={id} opts={opts} />
-      <div id="watch-info-wrapper">
-        <p id="watch-video-title">{VCData.video.snippet.title}</p>
-        <div id="watch-channel-info">
-          <img
-            id="watch-channel-thumbnail"
-            src={VCData.channel.snippet.thumbnails.medium?.url}
-            alt={VCData.video.snippet.channelTitle}
-            loading="lazy"
-          />
-          <p id="watch-channel-title">{VCData.video.snippet.channelTitle}</p>
-          <p id="watch-channel-subs">
-            {shortFormatSubsOrViews(
-              VCData.channel.statistics.subscriberCount,
-              "subscribers"
-            )}
-          </p>
+    <>
+      {VCData && (
+        <div id="watch-video-wrapper">
+          <YouTube id="watch-video-player" videoId={id} opts={opts} />
+          <div id="watch-info-wrapper">
+            <p id="watch-video-title">{VCData.video.snippet.title}</p>
+            <div id="watch-channel-info">
+              <img
+                id="watch-channel-thumbnail"
+                src={VCData.channel.snippet.thumbnails.medium?.url}
+                alt={VCData.video.snippet.channelTitle}
+                loading="lazy"
+              />
+              <p id="watch-channel-title">
+                {VCData.video.snippet.channelTitle}
+              </p>
+              <p id="watch-channel-subs">
+                {shortFormatSubsOrViews(
+                  VCData.channel.statistics.subscriberCount,
+                  "subscribers"
+                )}
+              </p>
+            </div>
+            <div id="watch-info-stats">
+              <p id="watch-video-views">
+                {longFormatViews(VCData.video.statistics.viewCount)}
+              </p>
+              <p id="watch-video-published">
+                {formatDate(VCData.video.snippet.publishedAt)}
+              </p>
+            </div>
+          </div>
+          <Transcript id={id} />
         </div>
-        <div id="watch-info-stats">
-          <p id="watch-video-views">
-            {longFormatViews(VCData.video.statistics.viewCount)}
-          </p>
-          <p id="watch-video-published">
-            {formatDate(VCData.video.snippet.publishedAt)}
-          </p>
-        </div>
-      </div>
-      <Transcript id={id} />
-    </div>
+      )}
+    </>
   );
 };
 
