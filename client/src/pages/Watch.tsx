@@ -110,6 +110,7 @@ const Watch = () => {
     return <div className="loading">Loading video...</div>;
   }
 
+  // Show error if backend unable to fetch
   if (error) {
     return <div className="error">Oops! No video found: {error}</div>;
   }
