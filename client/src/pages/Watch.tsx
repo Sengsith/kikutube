@@ -149,7 +149,7 @@ const Watch = () => {
               </p>
             </div>
           </div>
-          <Transcript id={id} />
+          {id && <Transcript id={id} />}
         </div>
       )}
     </>
