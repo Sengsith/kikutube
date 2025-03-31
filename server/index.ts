@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 // Load env variables
 dotenv.config();
 import videosRouter from "./routes/videosRoute";
-import subtitlesRouter from "./routes/subtitlesRoute";
+import searchRouter from "./routes/searchRoute";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 // params: {part: "id,snippet", chart: "mostPopular", regionCode: "JP", maxResults: "5"
 // GET https://www.googleapis.com/youtube/v3/videos
 app.use("/api/videos", videosRouter);
-app.use("/api/subtitles", subtitlesRouter);
+app.use("/api/search", searchRouter);
 
 app.listen(port, () => {
   console.log("Server is running!");

@@ -12,10 +12,12 @@
   "description": "",
   "dependencies": {
     "@sengsith/shared-types": "^1.0.0",
+    "@types/kuromoji": "^0.1.3",
     "axios": "^1.8.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "kuromoji": "^0.1.2",
     "youtube-captions-scraper": "^2.0.3"
   },
   "devDependencies": {

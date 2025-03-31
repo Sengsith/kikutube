@@ -32,6 +32,8 @@ export interface VideoSnippet {
   title: string;
   description: string;
   thumbnails: VideoThumbnails;
+  categoryId: string;
+  tags?: string[];
 }
 
 // Each video has these properties

@@ -28,16 +28,11 @@ router.get("/", async (req: Request, res: Response) => {
       key: process.env.YOUTUBE_API_KEY,
     };
 
-    const maxResults = req.query.maxResults;
-    const pageToken = req.query.pageToken;
-    const id = req.query.id;
-    if (maxResults) params.maxResults = maxResults.toString();
-    if (pageToken) params.pageToken = pageToken.toString();
-    if (id) {
-      params.id = id.toString();
-      // Need to get rid of chart if id is provided
-      delete params.chart;
-    }
+    const maxResults = req.query.maxResults?.toString();
+    const pageToken = req.query.pageToken?.toString();
+    const id = req.query.id?.toString();
+    if (id) delete params.chart;
+    Object.assign(params, { maxResults, pageToken, id });
 
     // 1. Fetch trending videos from /videos endpoint
     const videoResponse = await axios.get(
@@ -47,12 +42,26 @@ router.get("/", async (req: Request, res: Response) => {
 
     // Do not go further if videoResponse is empty
     if (!videoResponse.data.items || videoResponse.data.items.length === 0) {
-      console.error("No videos found:", params);
+      console.error("No videos found:", {
+        part: params.part,
+        chart: params.chart,
+        regionCode: params.regionCode,
+        id: params.id,
+        maxResults: params.maxResults,
+        pageToken: params.pageToken,
+      });
 
       res.status(400).json({
         message: "No videos found",
         error: "The YouTube API returned no video results",
-        params: params,
+        params: {
+          part: params.part,
+          chart: params.chart,
+          regionCode: params.regionCode,
+          id: params.id,
+          maxResults: params.maxResults,
+          pageToken: params.pageToken,
+        },
       });
       return;
     }

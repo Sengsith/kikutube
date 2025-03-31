@@ -8,7 +8,6 @@ import {
   longFormatViews,
 } from "../utils/format";
 import { YouTubeVideo, Channel } from "@sengsith/shared-types";
-import Transcript from "../components/Transcript";
 
 interface VideoChannelData {
   video: YouTubeVideo;
@@ -74,6 +73,40 @@ const Watch = () => {
   // Keep track of initial VCData load
   const initialLoadRef = useRef(false);
 
+  // Max amount of tags to pass into search endpoint
+  const TAGS = 5;
+  const getRecommendedVideos = useCallback(async () => {
+    if (!VCData || !id) return;
+
+    // Get video data
+    const videoSnippet = VCData.video.snippet;
+    const categoryId = videoSnippet.categoryId;
+    const tags = videoSnippet.tags || [];
+    const title = videoSnippet.title;
+
+    // Create URL for our GET request
+    const baseURL = import.meta.env.VITE_SERVER_URL + "/api/search";
+    const url = new URL(baseURL);
+    // Append params
+    url.searchParams.append("maxResults", "20");
+    url.searchParams.append("tags", tags.slice(0, TAGS).join(","));
+    url.searchParams.append("title", title);
+    url.searchParams.append("videoCategoryId", categoryId);
+    url.searchParams.append("type", "video");
+    url.searchParams.append("id", id);
+
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+    console.log(data);
+    // TODO: Set recommendedVideos
+  }, [VCData, id]);
+
   // Fetch data from backend only if VCData is falsy and id exists
   useEffect(() => {
     if (initialLoadRef.current) return;
@@ -81,6 +114,7 @@ const Watch = () => {
     const loadVideoData = async () => {
       setLoading(true);
 
+      // If VCData is empty but we have a valid ID
       if (!VCData && id) {
         const fetchedData = await fetchSingleVideo(id);
         setVCData(fetchedData);
@@ -91,10 +125,14 @@ const Watch = () => {
 
     loadVideoData();
 
+    if (VCData && id) {
+      getRecommendedVideos();
+    }
+
     return () => {
       initialLoadRef.current = true;
     };
-  }, [id, VCData, fetchSingleVideo]);
+  }, [id, VCData, fetchSingleVideo, getRecommendedVideos]);
 
   // Options for YouTube player
   const opts = {
@@ -149,7 +187,6 @@ const Watch = () => {
               </p>
             </div>
           </div>
-          {id && <Transcript id={id} />}
         </div>
       )}
     </>
