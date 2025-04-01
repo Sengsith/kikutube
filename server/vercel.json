@@ -1,6 +1,5 @@
 {
   "version": 2,
   "builds": [{ "src": "./index.ts", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/" }],
-  "includeFiles": ["public/data/dict/**/*"]
+  "routes": [{ "src": "/(.*)", "dest": "/" }]
 }
