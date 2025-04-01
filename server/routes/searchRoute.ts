@@ -9,32 +9,30 @@ const extractJapaneseKeywords = async (title: string): Promise<string[]> => {
   // kuromoji uses a callback pattern so we need to return promise
   return new Promise((resolve, reject) => {
     // Initialize analyzer with Japanese diciontary files
-    kuromoji
-      .builder({ dicPath: "node_modules/kuromoji/dict" })
-      .build((err, tokenizer) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        // Break down Japanese text into tokens (words and particles)
-        const tokens = tokenizer.tokenize(title);
-        // Filter tokens to keep specific parts of speech like nouns and verbs, but want to exclude basic verb forms
-        const keywords = tokens
-          .filter(
-            (token) =>
-              token.pos === "名詞" ||
-              (token.pos === "動詞" &&
-                token.basic_form !== "する" &&
-                token.basic_form !== "ある" &&
-                token.basic_form !== "いる")
-          )
-          // surface_form is the actual text of the string from title
-          .map((token) => token.surface_form)
-          // Removes single character words so we have more specificity
-          .filter((word) => word.length > 1);
-        // Resolve with top 5 unique keywords
-        resolve([...new Set(keywords)].slice(0, 5));
-      });
+    kuromoji.builder({ dicPath: "data/dict" }).build((err, tokenizer) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      // Break down Japanese text into tokens (words and particles)
+      const tokens = tokenizer.tokenize(title);
+      // Filter tokens to keep specific parts of speech like nouns and verbs, but want to exclude basic verb forms
+      const keywords = tokens
+        .filter(
+          (token) =>
+            token.pos === "名詞" ||
+            (token.pos === "動詞" &&
+              token.basic_form !== "する" &&
+              token.basic_form !== "ある" &&
+              token.basic_form !== "いる")
+        )
+        // surface_form is the actual text of the string from title
+        .map((token) => token.surface_form)
+        // Removes single character words so we have more specificity
+        .filter((word) => word.length > 1);
+      // Resolve with top 5 unique keywords
+      resolve([...new Set(keywords)].slice(0, 5));
+    });
   });
 };
 
