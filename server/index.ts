@@ -19,6 +19,28 @@ app.get("/", (req, res) => {
   res.send({ message: "Hello from the backend!" });
 });
 
+app.get("/api/debug-files", (req, res) => {
+  const fs = require("fs");
+  const path = require("path");
+  try {
+    // Try to list the contents of your data directory
+    const dataPath = path.join(process.cwd(), "data/dict");
+    const files = fs.existsSync(dataPath) ? fs.readdirSync(dataPath) : [];
+
+    res.status(200).json({
+      currentDirectory: process.cwd(),
+      dataPathExists: fs.existsSync(dataPath),
+      dataPath,
+      files,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unkonwn error occcured",
+      currentDirectory: process.cwd(),
+    });
+  }
+});
+
 // videos route
 // params: {part: "id,snippet", chart: "mostPopular", regionCode: "JP", maxResults: "5"
 // GET https://www.googleapis.com/youtube/v3/videos

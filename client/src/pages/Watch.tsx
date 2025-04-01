@@ -14,6 +14,7 @@ interface VideoChannelData {
   channel: Channel;
 }
 
+// TODO: Need initial load/routing to work with vercel, like NotFound page and dynamic /watch/:id pages
 const Watch = () => {
   // Use the id passed from Link
   const { id } = useParams();
