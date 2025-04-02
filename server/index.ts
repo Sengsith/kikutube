@@ -25,17 +25,36 @@ app.get("/api/debug-files", (req, res) => {
   try {
     // Try to list the contents of your data directory
     const dataPath = path.join(process.cwd(), "server");
-    const files = fs.existsSync(dataPath) ? fs.readdirSync(dataPath) : [];
+    let fileDetails: Array<{
+      name: string;
+      isDirectory: boolean;
+      size: number;
+      modifiedTime: Date;
+    }> = [];
+
+    if (fs.existsSync(dataPath)) {
+      const files = fs.readdirSync(dataPath);
+      fileDetails = files.map((file: string) => {
+        const filePath = path.join(dataPath, file);
+        const stats = fs.statSync(filePath);
+        return {
+          name: file,
+          isDirectory: stats.isDirectory(),
+          size: stats.size,
+          modifiedTime: stats.mtime,
+        };
+      });
+    }
 
     res.status(200).json({
       currentDirectory: process.cwd(),
       dataPathExists: fs.existsSync(dataPath),
       dataPath,
-      files,
+      files: fileDetails,
     });
   } catch (error) {
     res.status(500).json({
-      error: error instanceof Error ? error.message : "Unkonwn error occcured",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
       currentDirectory: process.cwd(),
     });
   }
