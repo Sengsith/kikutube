@@ -24,7 +24,7 @@ app.get("/api/debug-files", (req, res) => {
   const path = require("path");
   try {
     // Try to list the contents of your data directory
-    const dataPath = path.join(process.cwd(), "server", "public");
+    const dataPath = path.join(process.cwd(), "server");
     let fileDetails: Array<{
       name: string;
       isDirectory: boolean;
