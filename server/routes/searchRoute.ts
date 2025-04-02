@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import axios, { AxiosError } from "axios";
 import kuromoji from "kuromoji";
+import path from "path";
 
 const router = Router();
 
@@ -9,7 +10,9 @@ const extractJapaneseKeywords = async (title: string): Promise<string[]> => {
   // kuromoji uses a callback pattern so we need to return promise
   return new Promise((resolve, reject) => {
     const isLocalEnv = process.env.NODE_ENV !== "production";
-    const dictPath = isLocalEnv ? "./data/dict" : "/data/dict";
+    const dictPath = isLocalEnv
+      ? path.join(process.cwd(), "public", "data", "dict")
+      : path.join(process.cwd(), "data", "dict");
     console.log("Dictionary path:", dictPath);
     // Initialize analyzer with Japanese diciontary files
     kuromoji.builder({ dicPath: dictPath }).build((err, tokenizer) => {
