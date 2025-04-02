@@ -24,7 +24,7 @@ app.get("/api/debug-files", (req, res) => {
   const path = require("path");
   try {
     // Try to list the contents of your data directory
-    const dataPath = path.join(process.cwd());
+    const dataPath = path.join(process.cwd(), "server");
     const files = fs.existsSync(dataPath) ? fs.readdirSync(dataPath) : [];
 
     res.status(200).json({
