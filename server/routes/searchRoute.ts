@@ -11,8 +11,8 @@ const extractJapaneseKeywords = async (title: string): Promise<string[]> => {
   return new Promise((resolve, reject) => {
     const isLocalEnv = process.env.NODE_ENV !== "production";
     const dictPath = isLocalEnv
-      ? path.join(process.cwd(), "public", "data", "dict")
-      : path.join(process.cwd(), "data", "dict");
+      ? "./node_modules/kuromoji/dict"
+      : path.join(process.cwd(), "server", "node_modules", "kuromoji", "dict");
     console.log("Dictionary path:", dictPath);
     // Initialize analyzer with Japanese diciontary files
     kuromoji.builder({ dicPath: dictPath }).build((err, tokenizer) => {
