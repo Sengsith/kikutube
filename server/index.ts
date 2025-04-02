@@ -27,8 +27,8 @@ app.get("/api/debug-files", (req, res) => {
     const dataPath = path.join(
       process.cwd(),
       "server",
-      "node_modules",
-      "kuromoji",
+      "public",
+      "data",
       "dict"
     );
     let fileDetails: Array<{
