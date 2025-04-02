@@ -24,7 +24,7 @@ app.get("/api/debug-files", (req, res) => {
   const path = require("path");
 
   // Get the search term from query parameter
-  const searchTerm = "base.dat.gz";
+  const searchTerm = (req.query.search as string) || "";
 
   // Results will be stored here
   const results: Array<{
