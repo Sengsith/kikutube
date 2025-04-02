@@ -22,35 +22,67 @@ app.get("/", (req, res) => {
 app.get("/api/debug-files", (req, res) => {
   const fs = require("fs");
   const path = require("path");
-  try {
-    // Try to list the contents of your data directory
-    const dataPath = path.join(process.cwd(), "server");
-    let fileDetails: Array<{
-      name: string;
-      isDirectory: boolean;
-      size: number;
-      modifiedTime: Date;
-    }> = [];
 
-    if (fs.existsSync(dataPath)) {
-      const files = fs.readdirSync(dataPath);
-      fileDetails = files.map((file: string) => {
-        const filePath = path.join(dataPath, file);
-        const stats = fs.statSync(filePath);
-        return {
-          name: file,
-          isDirectory: stats.isDirectory(),
-          size: stats.size,
-          modifiedTime: stats.mtime,
-        };
-      });
+  // Get the search term from query parameter
+  const searchTerm = "base.dat.gz";
+
+  // Results will be stored here
+  const results: Array<{
+    path: string;
+    isDirectory: boolean;
+    size: number;
+    modifiedTime: Date;
+  }> = [];
+
+  // Recursive function to search directories
+  const searchDirectory = (dirPath: string, relativePath: string = "") => {
+    try {
+      const items = fs.readdirSync(dirPath);
+
+      for (const item of items) {
+        const fullPath = path.join(dirPath, item);
+        const itemRelativePath = path.join(relativePath, item);
+
+        try {
+          const stats = fs.statSync(fullPath);
+
+          // Check if name matches search term (if provided)
+          if (
+            !searchTerm ||
+            item.toLowerCase().includes(searchTerm.toLowerCase())
+          ) {
+            results.push({
+              path: itemRelativePath,
+              isDirectory: stats.isDirectory(),
+              size: stats.size,
+              modifiedTime: stats.mtime,
+            });
+          }
+
+          // If it's a directory, search inside it recursively
+          if (stats.isDirectory()) {
+            searchDirectory(fullPath, itemRelativePath);
+          }
+        } catch (err) {
+          // Skip files/folders we can't access
+          console.error(`Error accessing ${fullPath}: ${err}`);
+        }
+      }
+    } catch (err) {
+      console.error(`Error reading directory ${dirPath}: ${err}`);
     }
+  };
+
+  try {
+    // Start search from project root
+    const rootDir = process.cwd();
+    searchDirectory(rootDir);
 
     res.status(200).json({
-      currentDirectory: process.cwd(),
-      dataPathExists: fs.existsSync(dataPath),
-      dataPath,
-      files: fileDetails,
+      searchTerm: searchTerm || "all files",
+      rootDirectory: rootDir,
+      totalResults: results.length,
+      results: results,
     });
   } catch (error) {
     res.status(500).json({
